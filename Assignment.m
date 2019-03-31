@@ -9,8 +9,8 @@
 % Even thou start and target are specified they are not relevant in our
 % task
 
-s = [1, 1, 2, 3, 3, 4, 5, 5, 6];         % Start vertices
-t = [2, 6, 6, 4, 7, 5, 7, 8, 7];         % Target vertices
+s = [1, 1, 2, 3, 3, 4, 4, 5, 5, 6];         % Start vertices
+t = [2, 6, 6, 4, 7, 5, 7, 7, 8, 7];         % Target vertices
 n = [1:8];
 
 
@@ -56,13 +56,14 @@ G.Nodes.visitOrder(8,1) = 0;    % Visit order 1...n - 0 for not visited
 
 
 
-[T G] = dfForest(G, 7)
+[T, G, B] = dfForest(G, 7)
 
 
 
-function [T G] = dfForest(G, next)
+function [T, G, B] = dfForest(G, next)
 
-    T = [];                     % Empty DF tree in the beginning
+    B = graph();
+    T = digraph();                     % Empty DF tree in the beginning
     jnum = 1;                   % Start counting orders
     
     nodeCount = height(G.Nodes) % Number of nodes inthe graph
@@ -71,7 +72,7 @@ function [T G] = dfForest(G, next)
         
         if G.Nodes.visitOrder(next) == 0  
             % Visit here
-            [G, T, jnum, next] = dfRun(jnum, next, G, T);
+            [B, G, T, jnum, next] = dfRun(jnum, next, G, T, B);
         end 
     end
 
@@ -80,13 +81,13 @@ end
 
 
 
-function [G, T, jnum, next] = dfRun(jnum, next, G, T)
+function [B, G, T, jnum, next] = dfRun(jnum, next, G, T, B)
     
     % Get the order number from the for loop in dfForest method - 1 the
     % first time for node next (7)
     G.Nodes.visitOrder(next) = jnum 
     
-    T = [T next]
+%     T = [T next]
     
     % Next vertex will get the next order number (one higher)
     jnum = jnum + 1     
@@ -102,16 +103,20 @@ function [G, T, jnum, next] = dfRun(jnum, next, G, T)
         
         % If the neighbor has not been visited go to
         if G.Nodes.visitOrder(neighborCandi) == 0
-             [G, T, jnum, next] = dfRun(jnum, neighborCandi, G, T)
-             
-             % Here we should have an else statement for getting the
-             % backedge
-             
-        
-        end
+            T = addedge(T, next, neighborCandi)
             
+            % Uncomment to see plotting of DF tree during formation
+            % plot(T);
+            
+            [B, G, T, jnum, next] = dfRun(jnum, neighborCandi, G, T, B)
+             
+            % Setting "current" vertex "back"
+            next = predecessors(T, next)
+                     
+        end
+  
     end
-
+    
 end
 
 
