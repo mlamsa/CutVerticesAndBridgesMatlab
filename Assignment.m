@@ -1,4 +1,4 @@
-% Groupwork assignment: Algorithmfor finding briges and cut vertices
+% Groupwork assignment: Algorithm for finding bridges and cut vertices
 % Miska Merikukka & Miia Lämsä
 % Tampere University Discrete mathamatics, 2019 Spring
 %
@@ -55,7 +55,6 @@ chains = makeChains(G, B, T);
 [bridges, cutV] = bridgesCutV(G, chains)
 
 
-
 function [T, G, B] = dfForest(G, next)
 
     G.Nodes.visitOrder(8,1) = 0;    % Visit order 1...n - 0 for not visited
@@ -84,10 +83,8 @@ function [T, G, B] = dfForest(G, next)
 %             plot(G);
 %             title('Original graph G');
 %         set(gca,'XTick',[], 'YTick', []);
-    
-    
-end
 
+end
 
 function [B, G, T, jnum, next] = dfRun(jnum, next, G, T, B)
     
@@ -141,7 +138,6 @@ function [B, G, T, jnum, next] = dfRun(jnum, next, G, T, B)
     
 end
 
-
 function chains = makeChains(G, B, T)
 
     chainNo = 0;
@@ -175,6 +171,7 @@ function chains = makeChains(G, B, T)
             next = predecessors(T, next);
             
         end
+        
         % Add the last one
         L = [L next];
         
@@ -183,20 +180,11 @@ function chains = makeChains(G, B, T)
         
         % Format for next round
         L = [];
-        
-   
     end
-    
-    
-    
-
-
-
 end
 
 function [bridges, cutV] = bridgesCutV(G, chains)
-    
-     
+      
     loops = [];
     bridges = [];
     cutV = [];
@@ -231,5 +219,3 @@ function [bridges, cutV] = bridgesCutV(G, chains)
     end
 
 end
-
-
